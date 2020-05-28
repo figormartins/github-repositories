@@ -1,14 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaGithub, FaPlus, FaSpinner } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 
 import api from '../../services/api'
 
-import { Container, Form, SubmitButton, List } from './styles'
+import Container from '../../components/Container'
+import { Form, SubmitButton, List } from './styles'
 
 const Main = () => {
   const [repository, setRepository] = useState('')
   const [repositories, setRepositories] = useState([])
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const repos = localStorage.getItem('repositories')
+
+    if (repos) {
+      setRepositories(JSON.parse(repos))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('repositories', JSON.stringify(repositories))
+  }, [repositories])
 
   const handleInputChange = (e) => {
     setRepository(e.target.value)
@@ -20,9 +34,9 @@ const Main = () => {
     setLoading(true)
 
     const response = await api.get(`/repos/${repository}`)
-
     const data = {
-      name: response.data.full_name,
+      id: Date.now(),
+      name: response.data.full_name
     }
 
     setRepositories([...repositories, data])
@@ -45,7 +59,7 @@ const Main = () => {
           onChange={handleInputChange}
         />
 
-        <SubmitButton loading={loading}>
+        <SubmitButton loading={loading ? 1 : 0}>
           {loading ? (
             <FaSpinner color="#FFF" size={14} />
           ) : (
@@ -56,9 +70,9 @@ const Main = () => {
 
       <List>
         {repositories.map(repo => (
-          <li key={repo.name}>
+          <li key={repo.id}>
             <span>{repo.name}</span>
-            <a href="">Detalhes</a>
+            <Link to={`/repository/${encodeURIComponent(repo.name)}`}>Detalhes</Link>
           </li>
         ))}
       </List>

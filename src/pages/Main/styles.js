@@ -1,25 +1,5 @@
 import styled, { keyframes, css } from 'styled-components'
 
-const Container = styled.div`
-  max-width: 700px;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin: 80px auto;
-
-  h1 {
-    font-size: 20px;
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-  }
-
-  svg {
-    margin-right: 10px;
-  }
-`
-
 const Form = styled.form`
   margin-top: 30px;
   display: flex;
@@ -43,9 +23,9 @@ const rotate = keyframes`
   }
 `
 
-const SubmitButton = styled.button.attrs(props => ({
+const SubmitButton = styled.button.attrs(({ loading }) => ({
   type: 'submit',
-  disabled: props.loading,
+  disabled: loading,
 }))`
   background: #0B0A0D;
   border: 0;
@@ -55,7 +35,7 @@ const SubmitButton = styled.button.attrs(props => ({
 
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
 
   &[disabled] {
     cursor: not-allowed;
@@ -66,8 +46,8 @@ const SubmitButton = styled.button.attrs(props => ({
     padding: 0;
     margin: 0;
 
-    ${props =>
-    props.loading &&
+    ${({ loading }) =>
+    loading &&
     css`
       animation: ${rotate} 2s linear infinite;
     `}
@@ -96,4 +76,4 @@ const List = styled.ul`
   }
 `
 
-export { Container, Form, SubmitButton, List }
+export { Form, SubmitButton, List }
